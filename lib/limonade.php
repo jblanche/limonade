@@ -890,6 +890,11 @@ function error_http_status($errno)
 function request_accepts($type, $env = null)
 {
   if(is_null($env)) $env = env();
+	//return true if the url if postfixed with the type like /foo/bar.png returns true for request_accepts('png') no matter what the header specifies. 
+	if(array_pop(explode('.',$_SERVER["QUERY_STRING"])) == $type){
+		return true ; 
+	}
+
   $accept = array_key_exists('HTTP_ACCEPT', $env['SERVER']) ? $env['SERVER']['HTTP_ACCEPT'] : null;
   if(!$accept || $accept === '*/*')
   {
@@ -920,10 +925,21 @@ function request_accepts($type, $env = null)
   }
 }
 
+function responds_with($env = null){
+	if(is_null($env)) $env = env();
+	//return the type if specified in the URL (/foo/bar.png returns png no matter what the header specifies) 
+	if(sizeof(explode('.',$_SERVER["QUERY_STRING"])) >= 2 ){
+		return array_pop(explode('.',$_SERVER["QUERY_STRING"])) ; 
+	}
+	else if(request_accepts('json')){
+		return('json');
+	}
+	else {
+		return 'html' ; 
+	}
+}
+
                                      # # #
-
-
-
 
 # ============================================================================ #
 #    4. REQUEST                                                                #
