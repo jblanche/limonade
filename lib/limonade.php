@@ -928,8 +928,8 @@ function request_accepts($type, $env = null)
 function responds_with($env = null){
 	if(is_null($env)) $env = env();
 	//return the type if specified in the URL (/foo/bar.png returns png no matter what the header specifies) 
-	if(sizeof(explode('.',$_SERVER["QUERY_STRING"])) >= 2 ){
-		return array_pop(explode('.',$_SERVER["QUERY_STRING"])) ; 
+	if(sizeof(explode('.',$_SERVER["REDIRECT_URL"])) >= 2 ){
+		return array_pop(explode('.',$_SERVER["REDIRECT_URL"])) ; 
 	}
 	else if(request_accepts('json')){
 		return('json');
