@@ -926,23 +926,26 @@ function request_accepts($type, $env = null)
 }
 
 function responds_with($env = null){
-       if(is_null($env)) $env = env();
-       $userAgent = $_SERVER['HTTP_USER_AGENT'];
-       //return the type if specified in the URL (/foo/bar.png returns png no matter what the header specifies) 
-       if(sizeof(explode('.',$_SERVER["REDIRECT_URL"])) >= 2 ){
-               return array_pop(explode('.',$_SERVER["REDIRECT_URL"])) ;
-       }
-       else if(strpos($userAgent,"facebookexternalhit") == 0){
-               return 'html';
-       }
-       else if(request_accepts('json')){
-               return('json');
-       }
-       else {
-               return 'html' ;
-       }
-}
+	if(is_null($env)) $env = env();
+	$request_uri = request_uri();
+	$userAgent = $_SERVER['HTTP_USER_AGENT'];
 
+	//return the HTML page for Facebook
+	if(strpos($userAgent,"facebookexternalhit") == 0){
+		return 'html';
+	}
+
+	//return the type if specified in the URL (/foo/bar.png returns png no matter what the header specifies) 
+	if(sizeof(explode('.',$request_uri)) >= 2 ){
+		return array_pop(explode('.',$request_uri)) ; 
+	}
+	else if(request_accepts('json')){
+		return('json');
+	}
+	else {
+		return 'html' ; 
+	}
+}
 
 
 
